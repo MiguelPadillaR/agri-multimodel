@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ChatAssitantComponent } from "../chat-assitant/chat-assitant.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [FormsModule],
+  imports: [FormsModule, ChatAssitantComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'] // fixed typo: styleUrl -> styleUrls
 })
@@ -16,7 +17,6 @@ export class DashboardComponent {
   }
 
   public onFileSelected(event: any) {
-    console.log("File info", event.target.files[0]);
     const files = event.target.files;
     if (files.length > 0) {
       this.imageFile = files[0];

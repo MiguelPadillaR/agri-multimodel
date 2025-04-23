@@ -1,0 +1,14 @@
+<div class="chat-window">
+    @for (msg of messages; track $index) {
+        <div class="message {{ msg.role }}">
+            <div class="bubble">{{ msg.content }}</div>
+          </div>
+      
+    }
+  </div>
+  
+  <!-- Optional input box inside chat (if needed) -->
+  <!--
+  <textarea [(ngModel)]="userInput" (ngModelChange)="onInputChange($event)"></textarea>
+  -->
+  

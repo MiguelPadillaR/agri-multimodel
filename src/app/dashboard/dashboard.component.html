@@ -1,24 +1,33 @@
 <div id="dashboard">
     <div class="content">
-        <div id="image">
-            <div class="image-header">
-                <h2>Upload image</h2>
-            </div>
-            <div class="image-preview">
-                @if(imagePreviewUrl){
-                    <img [src]="imagePreviewUrl" alt="Preview" />
-                } 
-            </div>
-            @if (imageFile) {
-                <div class="image-desc">
-                    <p> Name: {{ imageFile.name }}</p>
-                    <p>Here will be the physical description of the image</p>
+        <div class="top-section">
+            <div id="image">
+                <div class="image-header">
+                    <h2>Upload image</h2>
                 </div>
-            }
-        </div>
-
-        <div id="chat">
-
+                <div class="image-preview">
+                    @if(imagePreviewUrl){
+                        <img [src]="imagePreviewUrl" alt="Preview" />
+                    } 
+                </div>
+                @if (imageFile) {
+                    <div class="image-desc">
+                        <p> Name: {{ imageFile.name }}</p>
+                        <p>Here will be the physical description of the image</p>
+                    </div>
+                }
+            </div>
+            <div id="chat">
+                <div class="chat-header">
+                    <h2>Assitant</h2>
+                </div>
+                <div class="chat-content">
+                    <app-chat-assitant
+                    [userInput]="userInput"
+                    (userInputChange)="userInput = $event">>
+                    </app-chat-assitant>
+                </div>
+            </div>
         </div>
 
         <div id="input">
