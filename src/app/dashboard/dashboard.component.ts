@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChatAssitantComponent } from "../chat-assitant/chat-assitant.component";
+import { ChatAssistantComponent } from "../chat-assistant/chat-assistant.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [FormsModule, ChatAssitantComponent],
+  imports: [FormsModule, ChatAssistantComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'] // fixed typo: styleUrl -> styleUrls
 })
@@ -12,10 +12,11 @@ export class DashboardComponent {
   public imageFile: File | null = null;
   public imagePreviewUrl: string | null = null;
   public userInput: string = ""
+  @ViewChild(ChatAssistantComponent) chatAssistant!: ChatAssistantComponent;
+  
 
-  ngOnInit() {
-  }
-
+  
+  
   public onFileSelected(event: any) {
     const files = event.target.files;
     if (files.length > 0) {
@@ -27,15 +28,26 @@ export class DashboardComponent {
         this.imagePreviewUrl = e.target.result;
       };
       reader.readAsDataURL(this.imageFile as Blob);
+      this.chatAssistant.addUserMessage(this.imageFile?.name, true);
     } else {
       this.imageFile = null;
       this.imagePreviewUrl = null;
     }
   }
 
-  public sendUserInput () {
-    console.log("Input:", this.userInput);
+  public sendUserInput() {
+    if (this.userInput.trim()) {
+      this.chatAssistant.addUserMessage(this.userInput);
+      this.clearUserInput();
+    }
   }
+
+
+  public clearUserInput() {
+    this.userInput = '';
+
+  }
+
   public getInputSuggesiton() {
     this.userInput = "This is my brand new suggestion!"
   }

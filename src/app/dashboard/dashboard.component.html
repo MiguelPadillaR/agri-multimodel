@@ -8,7 +8,9 @@
                 <div class="image-preview">
                     @if(imagePreviewUrl){
                         <img [src]="imagePreviewUrl" alt="Preview" />
-                    } 
+                    } @else {
+                        <img class="image-icon" src="image-icon.png" alt="Upload image" />
+                    }
                 </div>
                 @if (imageFile) {
                     <div class="image-desc">
@@ -21,11 +23,8 @@
                 <div class="chat-header">
                     <h2>Assitant</h2>
                 </div>
-                <div class="chat-content">
-                    <app-chat-assitant
-                    [userInput]="userInput"
-                    (userInputChange)="userInput = $event">>
-                    </app-chat-assitant>
+                <div class="chat-content" #chatContent>
+                    <app-chat-assitant></app-chat-assitant>
                 </div>
             </div>
         </div>
@@ -36,11 +35,11 @@
               <input type="file" (change)="onFileSelected($event)"/>
             </label>
           
-            <textarea id="user-input" [(ngModel)]="userInput" placeholder="Type here..." ></textarea>
+            <textarea id="user-input" (keydown.enter)="sendUserInput()" (keyup.enter)="clearUserInput()" [(ngModel)]="userInput" placeholder="Type here..." ></textarea>
           
             <button class="input-button" (click)="sendUserInput()" title="Send prompt.">Send</button>
             <button class="input-button" (click)="getInputSuggesiton()" title="Get a suggested prompt from the reply.">Get suggestion</button>
-          </div>
+        </div>
           
     </div>
 </div>
