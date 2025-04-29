@@ -35,10 +35,28 @@
               <input type="file" (change)="onFileSelected($event)"/>
             </label>
           
-            <textarea id="user-input" (keydown.enter)="sendUserInput()" (keyup.enter)="clearUserInput()" [(ngModel)]="userInput" placeholder="Type here..." ></textarea>
-          
-            <button class="input-button" (click)="sendUserInput()" title="Send prompt.">Send</button>
-            <button class="input-button" (click)="getInputSuggesiton()" title="Get a suggested prompt from the reply.">Get suggestion</button>
+            <textarea 
+                id="user-input" 
+                (keydown.enter)="sendUserInput()"
+                (keyup.enter)="clearUserInput()"
+                placeholder="Type here..." 
+                [(ngModel)]="userInput"
+            >
+            </textarea>
+            <button 
+                class="input-button"
+                (click)="sendUserInput()"
+                title="Send prompt."
+            >
+                Send
+            </button>
+            <button
+                class="input-button"
+                (click)="getInputSuggesiton()"
+                title="Get a suggested prompt from the reply."
+            >
+                Get suggestion
+            </button>
         </div>
           
     </div>

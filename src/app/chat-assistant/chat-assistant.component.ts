@@ -3,7 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
-  typing?: boolean;
+  loading?: boolean;
   revealProgress?: string;
 }
 
@@ -44,13 +44,15 @@ export class ChatAssistantComponent {
     this.scrollToBottom();
   }
   private getAssistantOutput(userInput: string) {
-    // Show typing icon
-    this.messages.push({ role: 'assistant', content: '', typing: true });
+    // Show loading response icon
+    this.messages.push({ role: 'assistant', content: '', loading: true });
   
     setTimeout(() => {
-      // Remove typing icon
+      // Remove loading response icon
       const last = this.messages[this.messages.length - 1];
-      if (last.typing) this.messages.pop();
+      if (last.loading) {
+        this.messages.pop();
+      }
   
       const fullText = this.generateMockResponse(userInput);
       const newMsg: ChatMessage = {
@@ -59,11 +61,11 @@ export class ChatAssistantComponent {
         revealProgress: ''
       };
       this.messages.push(newMsg);
-      this.animateTyping(newMsg, fullText);
+      this.animateLoadingResponse(newMsg, fullText);
     }, 1000);
   }
   
-  private animateTyping(msg: ChatMessage, fullText: string) {
+  private animateLoadingResponse(msg: ChatMessage, fullText: string) {
     let index = 0;
     const interval = setInterval(() => {
       if (index < fullText.length) {
@@ -77,7 +79,7 @@ export class ChatAssistantComponent {
   }
     
   private generateMockResponse(input: string): string {
-    return `Got it! You said:\n"${input.trim()}"\nLet me think more on that... 🤖`;
+    return `Got it! You send:\n"${input.trim()}"\nLet me think more on that... 🤖`;
   }
 
 }

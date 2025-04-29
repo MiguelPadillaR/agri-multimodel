@@ -2,7 +2,7 @@
   @for (msg of messages; track $index) {
     <div class="message {{ msg.role }}">
       <div class="bubble">
-        @if (msg.typing) {
+        @if (msg.loading) {
           <img src="message-icon.png" class="typing-icon" alt="Assistant is thinking...">
         } @else {
           {{ msg.revealProgress ?? msg.content }}
@@ -12,10 +12,3 @@
   }
   <div #scrollAnchor></div> 
 </div>
-
-  
-  <!-- Optional input box inside chat (if needed) -->
-  <!--
-  <textarea [(ngModel)]="userInput" (ngModelChange)="onInputChange($event)"></textarea>
-  -->
-  

@@ -13,10 +13,7 @@ export class DashboardComponent {
   public imagePreviewUrl: string | null = null;
   public userInput: string = ""
   @ViewChild(ChatAssistantComponent) chatAssistant!: ChatAssistantComponent;
-  
 
-  
-  
   public onFileSelected(event: any) {
     const files = event.target.files;
     if (files.length > 0) {
@@ -41,7 +38,6 @@ export class DashboardComponent {
       this.clearUserInput();
     }
   }
-
 
   public clearUserInput() {
     this.userInput = '';
