@@ -15,13 +15,14 @@ interface ChatMessage {
 })
 
 export class ChatAssistantComponent {
-
+  // Messages buffer variable
   public messages: ChatMessage[] = [
-    { role: 'assistant', content: 'Hello there!\n\nI am your Agricultural Imaging Assitant, but you can call me AgrIA!\n\nMy purpose here is to analyse satellite images of crop fields to help farmers analyze their use of space and resources, as well as agricultural practices, in order to help them qualify for the European Comitee of Common Agricultural Policies (CAPs)\n\nJust upload a satellite image of your crop fields and we will get to work!' },
+    { role: 'assistant', content: 'Hello there!\n\nI am your Agricultural Imaging Assitant, but you can call me AgrIA!\n\nMy purpose here is to analyse satellite images of crop fields to help farmers analyze their use of space and resources, as well as agricultural practices, in order to help them qualify for the European Comitee of Common Agricultural Policies (CAPs) subventions.\n\nJust upload a satellite image of your crop fields and we will get to work!' },
     { role: 'assistant', content: 'Also, this is all hardcoded as an example of chat' },
     { role: 'user', content: 'Can you tell me a joke?' },
     { role: 'assistant', content: 'Sure! Why did the tomato turn red? Because it saw the salad dressing! 😄' }
   ];
+  // 
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
 
   ngAfterViewInit() {
