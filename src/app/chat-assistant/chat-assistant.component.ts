@@ -1,17 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MessagingService } from '../services/messaging.service';
 
-interface ChatMessage {
-  role: 'user' | 'assistant';
-  content: string;
-  loading?: boolean;
-  revealProgress?: string;
-}
 
 @Component({
   selector: 'app-chat-assitant',
   imports: [],
   templateUrl: './chat-assistant.component.html',
-  styleUrl: './chat-assistant.component.css'
+  styleUrls: ['./chat-assistant.component.css']
 })
 
 export class ChatAssistantComponent {
@@ -24,6 +19,8 @@ export class ChatAssistantComponent {
   ];
   // 
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
+
+  constructor(private messagingService: MessagingService) { }
 
   ngAfterViewInit() {
     this.scrollToBottom();  // in case there are preloaded messages
@@ -45,17 +42,18 @@ export class ChatAssistantComponent {
     this.scrollToBottom();
   }
   private getAssistantOutput(userInput: string) {
+    console.log('User input:', userInput);
     // Show loading response icon
     this.messages.push({ role: 'assistant', content: '', loading: true });
-  
-    setTimeout(() => {
+    
+    this.messagingService.sendUserInput(userInput).subscribe((response: any) => {
       // Remove loading response icon
       const last = this.messages[this.messages.length - 1];
       if (last.loading) {
         this.messages.pop();
       }
-  
-      const fullText = this.generateMockResponse(userInput);
+      console.log(response.data);
+      const fullText = response.data; // Assuming the response contains the full text
       const newMsg: ChatMessage = {
         role: 'assistant',
         content: fullText,
@@ -63,7 +61,25 @@ export class ChatAssistantComponent {
       };
       this.messages.push(newMsg);
       this.animateLoadingResponse(newMsg, fullText);
-    }, 1000);
+    });
+
+
+    // setTimeout(() => {
+    //   // Remove loading response icon
+    //   const last = this.messages[this.messages.length - 1];
+    //   if (last.loading) {
+    //     this.messages.pop();
+    //   }
+  
+    //   const fullText = this.generateMockResponse(userInput);
+    //   const newMsg: ChatMessage = {
+    //     role: 'assistant',
+    //     content: fullText,
+    //     revealProgress: ''
+    //   };
+    //   this.messages.push(newMsg);
+    //   this.animateLoadingResponse(newMsg, fullText);
+    // }, 1000);
   }
   
   private animateLoadingResponse(msg: ChatMessage, fullText: string) {

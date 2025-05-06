@@ -34,6 +34,7 @@ export class DashboardComponent {
 
   public sendUserInput() {
     if (this.userInput.trim()) {
+      console.log('User input:', this.userInput);
       this.chatAssistant.addUserMessage(this.userInput);
       this.clearUserInput();
     }
