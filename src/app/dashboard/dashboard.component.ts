@@ -25,7 +25,7 @@ export class DashboardComponent {
         this.imagePreviewUrl = e.target.result;
       };
       reader.readAsDataURL(this.imageFile as Blob);
-      this.chatAssistant.addUserMessage(this.imageFile?.name, true);
+      this.chatAssistant.readImage(this.imageFile?.name as string);
     } else {
       this.imageFile = null;
       this.imagePreviewUrl = null;
@@ -34,6 +34,7 @@ export class DashboardComponent {
 
   public sendUserInput() {
     if (this.userInput.trim()) {
+      console.log("Sending user input:", this.userInput); 
       this.chatAssistant.addUserMessage(this.userInput);
       this.clearUserInput();
     }
@@ -41,7 +42,6 @@ export class DashboardComponent {
 
   public clearUserInput() {
     this.userInput = '';
-
   }
 
   public getInputSuggesiton() {
