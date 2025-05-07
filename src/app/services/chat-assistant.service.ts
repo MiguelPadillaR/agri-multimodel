@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChatAssistantResponse } from '../models/chat-assistant.model';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -12,9 +11,14 @@ export class ChatAssistantService {
 
   constructor(private http: HttpClient) {}
 
-  sendUserInput(userInput: string): Observable<string> {
-    return this.http.post<{ response: string }>(`${this.apiUrl}/send-user-input`, { user_input: userInput })
+  sendUserInput(request: FormData): Observable<string> {
+    return this.http.post<{ response: string }>(`${this.apiUrl}/send-user-input`, request)
       .pipe(map(res => res.response));
   }
+  sendImage(request: FormData): Observable<string> {
+    return this.http.post<{ response: string }>(`${this.apiUrl}/send-image`, request)
+    .pipe(map(res => res.response));
+  }
+
 }
 

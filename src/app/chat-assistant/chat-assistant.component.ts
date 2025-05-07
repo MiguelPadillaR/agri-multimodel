@@ -10,7 +10,7 @@ import { ChatAssistantService } from '../services/chat-assistant.service';
 })
 
 export class ChatAssistantComponent {
-  // Messages buffer variable
+  // Messages' stack variable
   public messages: ChatMessage[] = [
     { role: 'assistant', content: 'Hello there!\n\nI am your Agricultural Imaging Assitant, but you can call me AgrIA!\n\nMy purpose here is to analyse satellite images of crop fields to help farmers analyze their use of space and resources, as well as agricultural practices, in order to help them qualify for the European Comitee of Common Agricultural Policies (CAPs) subventions.\n\nJust upload a satellite image of your crop fields and we will get to work!' },
     { role: 'assistant', content: 'Also, this is all hardcoded as an example of chat' },
@@ -32,7 +32,7 @@ export class ChatAssistantComponent {
   private scrollToBottom() {
     setTimeout(() => {
       this.scrollAnchor?.nativeElement.scrollIntoView({ block:"end", behavior: 'smooth' });
-    }, 500);
+    }, 1500);
   }
 
   /**
@@ -41,57 +41,97 @@ export class ChatAssistantComponent {
    * @param isImageUpload - Indicates if the message is an image upload
    */
   public addUserMessage(content: string) {
-    console.log("Got user input:", content); // Debugging log
     if (content.length > 0) {
       this.messages.push({ role: 'user', content });
       this.getAssistantOutput(content);
     }
     this.scrollToBottom();
   }
-  // TODO: Complete with API function for image analysis (image2text)
-  readImage(imageFileName: string) {
-    this.getAssistantMockOutput(imageFileName);
-  }
 
-  public getAssistantOutput(userInput: string) {
-    const trimmedInput: string = userInput.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ');
-  
-    // 1. Push the loading icon message
-    const loadingMsg: ChatMessage = { role: 'assistant', content: '', loading: true };
-    this.messages.push(loadingMsg); // Add loading indicator
-    this.scrollToBottom();
-  
-    // 2. Call API
-    this.chatAssistantService.sendUserInput(trimmedInput).subscribe({
+  /**
+   * Send image to assistant
+   * @param imageFile - Image file to be sent to the assistant
+   */
+  sendImage(imageFile: File) {
+    this.showMessageIcon();
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    
+    this.chatAssistantService.sendImage(formData).subscribe({
       next: (responseText: string) => {
-        // 3. Remove loading message
-        const last = this.messages[this.messages.length - 1];
-        if (last.loading) {
-          this.messages.pop();
-        }
-  
-        // 4. Add animated real response
-        const newMsg: ChatMessage = {
-          role: 'assistant',
-          content: responseText,
-          revealProgress: ''
-        };
-        this.messages.push(newMsg);
-        this.animateLoadingResponse(newMsg, responseText);
-        this.scrollToBottom();
+        this.hideMessageIcon();
+        this.displayResponse(responseText);
       },
       error: (err) => {
         console.error('Error from assistant:', err);
-        if (this.messages[this.messages.length - 1].loading) {
-          this.messages.pop();
-        }
+        this.hideMessageIcon();
         this.messages.push({
           role: 'assistant',
-          content: 'Oops! Something went wrong while processing your message. Please try again later.'
+          content: 'Oops! Something went wrong while processing your image. Error was:\n\n' + err.error.error + '\n\nPlease try again later.'
+        });
+        this.scrollToBottom();
+        // this.getAssistantMockOutput(imageFile.name);
+      }
+    });  
+  }
+
+  /**
+   * Send input and pushes assistant's response to chat stack
+   *  
+   * @param userInput - User input message
+   */
+  public getAssistantOutput(userInput: string) {
+    const trimmedInput: string = userInput.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ');
+    this.showMessageIcon();
+    const formData = new FormData();
+    formData.append('user_input', trimmedInput);
+
+    this.chatAssistantService.sendUserInput(formData).subscribe({
+      next: (responseText: string) => {
+        this.hideMessageIcon();
+        this.displayResponse(responseText);
+      },
+      error: (err) => {
+        console.error('Error from assistant:', err);
+        this.hideMessageIcon();
+        this.messages.push({
+          role: 'assistant',
+          content: 'Oops! Something went wrong while processing your image. Error was:\n\n' + err.error.error + '\n\nPlease try again later.'
         });
         this.scrollToBottom();
       }
     });
+  }
+
+  /**
+   * Shows message icon while waiting response
+   */
+  private showMessageIcon() {
+    const loadingMsg: ChatMessage = { role: 'assistant', content: '', loading: true };
+    this.messages.push(loadingMsg); // Add loading indicator
+    this.scrollToBottom();
+  }
+
+  /**
+   * Hides message icon after response
+   */
+  private hideMessageIcon() {
+    const last = this.messages[this.messages.length - 1];
+    if (last.loading) {
+      this.messages.pop();
+    }
+  }  
+
+  private displayResponse(responseText: string) {
+    const newMsg: ChatMessage = {
+      role: 'assistant',
+      content: responseText,
+      revealProgress: ''
+    };
+    this.messages.push(newMsg);
+    this.animateLoadingResponse(newMsg, responseText);
+    this.scrollToBottom();
+
   }
     
   /**
